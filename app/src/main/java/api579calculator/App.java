@@ -11,7 +11,34 @@ public class App {
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
 
-        Pipe testPipe = new Pipe(100.0, 10, Pipe.PipeType.STRAIGHT, 2.1287, 147.0, 1.0, 1.0, 0.4, 1.0);
-        testPipe.printPipeInfo();
+        // Straight test Pipe
+        Pipe straightTestPipe = new Pipe(
+                100.0,
+                10,
+                Pipe.PipeType.STRAIGHT,
+                2.1287,
+                147.0,
+                1.0,
+                1.0,
+                0.4,
+                1.0,
+                "This is a test pipe");
+        straightTestPipe.printPipeInfo();
+
+        // Elbow test Pipe
+        Pipe elbowTestPipe = new Pipe(
+                100.0,
+                10.0,
+                Pipe.PipeType.ELBOW,
+                150.0,
+                2.1287,
+                147,
+                1.0,
+                1.0,
+                0.4,
+                1.0,
+                "This is a test elbow pipe." );
+        elbowTestPipe.printPipeInfo();
+
     }
 }
