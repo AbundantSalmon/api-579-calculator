@@ -3,6 +3,7 @@ package api579calculator;
 /**
  * Pipe class used to describe pipes and it's properties under analysis.
  * All values in mm, MPa and N.
+ * Current calculations only consider straight pipes.
  *
  * @author AbundantSalmon
  */
@@ -15,19 +16,22 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     public enum PipeType
     {
         STRAIGHT,
-        ELBOW
+        ELBOW           // Not currently used right now
     }
 
     private final double outerDiameter;
     private static final double MINOUTERDIAMETER = 0.0;
 
-    private final double thickness;
+    private final double nomThickness;
+
+    private final double corrThickness;
+
     private static final double MINTHICKNESS = 0.0;
 
     private final PipeType type;
 
-    private double elbowRadius;
-    private static final double MINELBOWRADIUS = 0.0;
+//    private double elbowRadius;
+//    private static final double MINELBOWRADIUS = 0.0;
 
     private final double designPressure;
     private static final double MINDESIGNPRESSURE = 0.0;
@@ -50,13 +54,17 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     private final double corrosionAllowance;
     private static final double MINCORROSIONALLOWANCE = 0.0;
 
+    private final double tSL = 0.0; // supplemental thickness for mechanical loads other than pressure.
+                                    // not currently used as assuming Type A Component.
+
     private final String notes;
 
     /**
      * Instantiates a new Straight Pipe.
      *
      * @param outerDiameter                 the outer diameter
-     * @param thickness                     the thickness
+     * @param nomThickness                  the nominal thickness
+     * @param corrThickness                 the corroded thickness
      * @param type                          the type
      * @param designPressure                the design pressure
      * @param designAllowableMaterialStress the design allowable material stress
@@ -66,7 +74,7 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
      * @param corrosionAllowance            the corrosion allowance
      * @param notes                         the notes
      */
-    Pipe(double outerDiameter, double thickness, PipeType type, double designPressure, double designAllowableMaterialStress, double eFactor, double wFactor, double yFactor, double corrosionAllowance, String notes)
+    Pipe(double outerDiameter, double nomThickness, double corrThickness, PipeType type, double designPressure, double designAllowableMaterialStress, double eFactor, double wFactor, double yFactor, double corrosionAllowance, String notes)
     {
         if(outerDiameter > MINOUTERDIAMETER)
         {
@@ -75,9 +83,16 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
             throw new IllegalArgumentException();
         }
 
-        if(thickness > MINTHICKNESS)
+        if(nomThickness > MINTHICKNESS)
         {
-            this.thickness = thickness;
+            this.nomThickness = nomThickness;
+        } else {
+            throw new IllegalArgumentException();
+        }
+
+        if(corrThickness > MINTHICKNESS)
+        {
+            this.corrThickness = corrThickness;
         } else {
             throw new IllegalArgumentException();
         }
@@ -134,53 +149,58 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
         this.notes = notes;
     }
 
-    /**
-     * Instantiates a new Elbow Pipe.
-     *
-     * @param outerDiameter                 the outer diameter
-     * @param thickness                     the thickness
-     * @param type                          the type
-     * @param elbowRadius                   the elbow radius
-     * @param designPressure                the design pressure
-     * @param designAllowableMaterialStress the design allowable material stress
-     * @param eFactor                       the e factor
-     * @param wFactor                       the w factor
-     * @param yFactor                       the y factor
-     * @param corrosionAllowance            the corrosion allowance
-     */
-    Pipe(double outerDiameter, double thickness, PipeType type, double elbowRadius, double designPressure, double designAllowableMaterialStress, double eFactor, double wFactor, double yFactor, double corrosionAllowance, String notes)
-    {
-        this(outerDiameter, thickness, type, designPressure, designAllowableMaterialStress, eFactor, wFactor, yFactor, corrosionAllowance, notes);
-        if(type != PipeType.ELBOW)
-        {
-            throw new IllegalArgumentException("This constructor is only for elbow pipes");
-        } else {
-            if(elbowRadius >= MINELBOWRADIUS)
-            {
-                this.elbowRadius = elbowRadius;
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }
-    }
+//    /**
+//     * Instantiates a new Elbow Pipe.
+//     *
+//     * @param outerDiameter                 the outer diameter
+//     * @param corrThickness                     the thickness
+//     * @param type                          the type
+//     * @param elbowRadius                   the elbow radius
+//     * @param designPressure                the design pressure
+//     * @param designAllowableMaterialStress the design allowable material stress
+//     * @param eFactor                       the e factor
+//     * @param wFactor                       the w factor
+//     * @param yFactor                       the y factor
+//     * @param corrosionAllowance            the corrosion allowance
+//     * @param notes                         the notes
+//     */
+//    Pipe(double outerDiameter, double corrThickness, PipeType type, double elbowRadius, double designPressure, double designAllowableMaterialStress, double eFactor, double wFactor, double yFactor, double corrosionAllowance, String notes)
+//    {
+//        this(outerDiameter, corrThickness, type, designPressure, designAllowableMaterialStress, eFactor, wFactor, yFactor, corrosionAllowance, notes);
+//        if(type != PipeType.ELBOW)
+//        {
+//            throw new IllegalArgumentException("This constructor is only for elbow pipes");
+//        } else {
+//            if(elbowRadius >= MINELBOWRADIUS)
+//            {
+//                this.elbowRadius = elbowRadius;
+//            } else {
+//                throw new IllegalArgumentException();
+//            }
+//        }
+//    }
 
     /**
      * Print pipe info to console.
      */
     public void printPipeInfo()
     {
-        System.out.println( "The Pipe's Information are as follows:\n" +
-                            "Notes: " + getNotes() + "\n" +
+        System.out.println( "Pipe Data:\n" +
                             "Type: " + getType() + "\n" +
                             "OD: " + getOuterDiameter() + "\n" +
-                            "THK: " + getThickness() + "\n" +
-                            "Elbow Radius: " + getElbowRadius() + "\n" +
+                            "Nominal THK: " + getNomThickness() + "\n" +
+                            "Corroded THK: " + getCorrThickness() + "\n" +
+                            //"Elbow Radius: " + getElbowRadius() + "\n" +
                             "Design Pressure: " + getDesignPressure() + "\n" +
                             "Design Allowable Stress: " + getDesignAllowableMaterialStress() + "\n" +
                             "E: " + geteFactor() + "\n" +
                             "W: " + getwFactor() + "\n" +
                             "y: " + getyFactor() + "\n" +
-                            "CA: " + getCorrosionAllowance() + "\n"
+                            "CA: " + getCorrosionAllowance() + "\n" +
+                            "t_min: " + calculateT_min() + "\n" +
+                            "MAWP: " + calculateMAWP() + "\n" +
+                            "Notes: " + getNotes() + "\n" //+
+                            //"sigma_max: " + calculateSigmaMax() + "\n"
         );
     }
 
@@ -194,12 +214,21 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     }
 
     /**
-     * Gets thickness.
+     * Gets nominal thickness.
      *
-     * @return the thickness
+     * @return the nomThickness
      */
-    public double getThickness() {
-        return thickness;
+    public double getNomThickness() {
+        return nomThickness;
+    }
+
+    /**
+     * Gets corroded thickness.
+     *
+     * @return the corrThickness
+     */
+    public double getCorrThickness() {
+        return corrThickness;
     }
 
     /**
@@ -211,19 +240,19 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
         return type;
     }
 
-    /**
-     * Gets elbow radius.
-     *
-     * @return the elbow radius if Elbow pipe, else NaN
-     */
-    public double getElbowRadius() {
-        if(type == PipeType.ELBOW)
-        {
-            return elbowRadius;
-        }  else {
-            return Double.NaN;
-        }
-    }
+//    /**
+//     * Gets elbow radius.
+//     *
+//     * @return the elbow radius if Elbow pipe, else NaN
+//     */
+//    public double getElbowRadius() {
+//        if(type == PipeType.ELBOW)
+//        {
+//            return elbowRadius;
+//        }  else {
+//            return Double.NaN;
+//        }
+//    }
 
     /**
      * Gets design pressure.
@@ -287,4 +316,122 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     public String getNotes() {
         return notes;
     }
+
+    /**
+     * Calculate t^c_min as per 2C.146.
+     *
+     * @return the t^c_min
+     */
+    public double calculateTC_min()
+    {
+        return  (designPressure*outerDiameter)
+                /
+                (2*(designAllowableMaterialStress*eFactor+designPressure*yFactor)) +
+                corrosionAllowance;
+    }
+
+    /**
+     * Calculate t^L_min as per 2C.149.
+     *
+     * @return the t^L_min
+     */
+    public double calculateTL_min()
+    {
+        return  (designPressure*outerDiameter)
+                /
+                (4*(designAllowableMaterialStress*eFactor+designPressure*yFactor)) +
+                tSL +
+                corrosionAllowance;
+    }
+
+    /**
+     * Calculate MAWP^C as per 2C.147.
+     *
+     * @return the MAWP^C
+     */
+    public double calculateMAWPC()
+    {
+        return calculateMAWPC(corrThickness); // calculate using overloaded function, t_am = t_corr
+    }
+
+    /**
+     * Calculate MAWP^C as per 2C.147.
+     * Overloaded to allow calculation with t_am which is thickness provide that is not t_corr,
+     * used for Acceptance criteria Table 4.4
+     *
+     * @return the MAWP^C
+     */
+    public double calculateMAWPC(double t_am)
+    {
+        return  (2*designAllowableMaterialStress*eFactor*(t_am))
+                /
+                (outerDiameter-2*yFactor*(t_am));
+    }
+
+    /**
+     * Calculate MAWP^L as per 2C.150.
+     *
+     * @return the MAWP^L
+     */
+    public double calculateMAWPL()
+    {
+        return  (4*designAllowableMaterialStress*eFactor*(corrThickness -tSL))
+                /
+                (outerDiameter-4*yFactor*(corrThickness -tSL));
+    }
+
+//    /**
+//     * Calculate sigma^C_m as per 2C.148.
+//     *
+//     * @return the sigma^C_m
+//     */
+//    public double calculateSigmaC_m()
+//    {
+//        return  (designPressure/eFactor)*
+//                (outerDiameter/(2*(corrThickness))-
+//                yFactor);
+//    }
+//
+//    /**
+//     * Calculate sigma^L_m as per 2C.151.
+//     *
+//     * @return the sigma^L_m
+//     */
+//    public double calculateSigmaL_m()
+//    {
+//        return  (designPressure/eFactor)*
+//                (outerDiameter/(4*(thickness-tSL))-
+//                        yFactor);
+//    }
+
+    /**
+     * Calculate t_min as per 2C.152.
+     *
+     * @return the t_min
+     */
+    public double calculateT_min()
+    {
+        return Math.max(calculateTC_min(), calculateTL_min());
+    }
+
+    /**
+     * Calculate MAWP as per 2C.153.
+     *
+     * @return the mawp
+     */
+    public double calculateMAWP()
+    {
+        return Math.min(calculateMAWPC(), calculateMAWPL());
+    }
+
+
+//    /**
+//     * Gets sigma_max as per 2C.154.
+//     *
+//     * @return the sigma_max
+//     */
+//    public double calculateSigmaMax()
+//    {
+//        return Math.max(calculateSigmaC_m(), calculateSigmaL_m());
+//    }
 }

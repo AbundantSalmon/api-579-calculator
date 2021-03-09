@@ -12,33 +12,24 @@ public class App {
         System.out.println(new App().getGreeting());
 
         // Straight test Pipe
-        Pipe straightTestPipe = new Pipe(
-                100.0,
-                10,
+        Pipe straightTestPipe = new Pipe(21.3,
+                2.77,
+                2.7,
                 Pipe.PipeType.STRAIGHT,
-                2.1287,
-                147.0,
+                15.0,
+                138.0,
                 1.0,
                 1.0,
                 0.4,
-                1.0,
-                "This is a test pipe");
-        straightTestPipe.printPipeInfo();
+                0,
+                "Use for testing purposes");
 
-        // Elbow test Pipe
-        Pipe elbowTestPipe = new Pipe(
-                100.0,
-                10.0,
-                Pipe.PipeType.ELBOW,
-                150.0,
-                2.1287,
-                147,
-                1.0,
-                1.0,
-                0.4,
-                1.0,
-                "This is a test elbow pipe." );
-        elbowTestPipe.printPipeInfo();
+        // Measurement points test
+        double[] points = {2.6,2.6,2.6,2.6,2.6,2.6,2.6};
+        Measurements testPoints = new Measurements(points, 100.0, Measurements.MeasurementLocation.STRAIGHT, "Used for testing purposes");
 
+        // Assessment
+        LevelOneAssessment assessment = new LevelOneAssessment(straightTestPipe,testPoints);
+        assessment.printAssessmentResults();
     }
 }

@@ -7,24 +7,25 @@ import java.util.Arrays;
  */
 
 public class Measurements { // need to consider thickness profile measurements later
-    private static final int MINMINMUMPOINTS = 15; // recommended minimum number of point thickness measurements
+    private static final int MINIMUMPOINTS = 15; // recommended minimum number of point thickness measurements
 
     public enum MeasurementLocation {
         STRAIGHT,
-        INTRODOS,
-        EXTRADOS
+        //INTRODOS,
+        //EXTRADOS
     }
 
     private final double[] thicknessMeasurements;
-    private MeasurementLocation measurementLocation;
-    private String notes;
+    private final MeasurementLocation measurementLocation;
+    private final double flawLongitudinalLength;              // s
+    private final String notes;
 
     /**
      * Instantiates a new Measurements.
      *
      * @param thicknessMeasurements the thickness measurements
      */
-    Measurements(double[] thicknessMeasurements, MeasurementLocation measurementLocation, String notes)
+    Measurements(double[] thicknessMeasurements, double flawLongitudinalLength, MeasurementLocation measurementLocation, String notes)
     {
         if(!(thicknessMeasurements.length > 0.0)) throw new IllegalArgumentException(); // need to at least have one measurement value
         for(double measurement: thicknessMeasurements)
@@ -33,6 +34,11 @@ public class Measurements { // need to consider thickness profile measurements l
         }
         this.thicknessMeasurements = thicknessMeasurements; // else there are not identified issues with the thickness measurements by themselves
 
+        if(flawLongitudinalLength >= 0){
+            this.flawLongitudinalLength = flawLongitudinalLength;
+        } else {
+            throw new IllegalArgumentException();
+        }
         this.measurementLocation = measurementLocation;
         this.notes = notes;
     }
@@ -92,12 +98,24 @@ public class Measurements { // need to consider thickness profile measurements l
     }
 
     /**
+     * Check whether API 579 recommends the use of thickness profiles using the COV of the readings .
+     *
+     * @return the boolean
+     */
+    public boolean checkCOV()
+    {
+        double baselineCOV = 0.1;   // COV should be less than 10% as per 4.3.3.2c
+                                    // else thickness profiles should be consider for use in the assessment
+        return getCOV() <= 0.1;
+    }
+
+    /**
      * Gets minimum recommend number of points.
      *
      * @return the minimum recommend number of points
      */
     public static int getMINMINMUMPOINTS() {
-        return MINMINMUMPOINTS;
+        return MINIMUMPOINTS;
     }
 
     /**
@@ -111,11 +129,22 @@ public class Measurements { // need to consider thickness profile measurements l
     }
 
     /**
+     * Gets flaw longitudinal length.
+     *
+     * @return the flaw longitudinal length
+     */
+    public double getFlawLongitudinalLength()
+    {
+        return flawLongitudinalLength;
+    }
+
+    /**
      * Gets measurement location.
      *
      * @return the measurement location
      */
-    public MeasurementLocation getMeasurementLocation() {
+    public MeasurementLocation getMeasurementLocation()
+    {
         return measurementLocation;
     }
 
@@ -126,5 +155,22 @@ public class Measurements { // need to consider thickness profile measurements l
      */
     public String getNotes() {
         return notes;
+    }
+
+    /**
+     * Print measurements details.
+     */
+    public void printMeasurementsDetails()
+    {
+        System.out.println("Point Thickness Readings (PTR):");
+        System.out.println("Notes: " + notes);
+        for(int i = 0; i < thicknessMeasurements.length; ++i)
+        {
+            System.out.println("Location " + (i+1) + ": \t\t" + thicknessMeasurements[i]);
+        }
+        if(!isMinimumRecommendedPoints()) // display warning about minimum recommend number of thickness readings
+        {
+            System.out.println("WARNING! for PTR, API 579 recommends at least " + getMINMINMUMPOINTS() + " points.");
+        }
     }
 }

@@ -28,7 +28,7 @@ The program will be able to perform basic calculations (Level 1 for now) as per 
                 1. Nominal Thickness
             3. Straight or Elbow
                 1. Radius if Elbow
-            4. Temperature 
+            4. Temperature // Later
             5. Design Pressure
             6. Design Allowable Stress
             7. Quality Factor (E)
@@ -36,9 +36,9 @@ The program will be able to perform basic calculations (Level 1 for now) as per 
             9. Y Coefficent
             10. Corrosion allowance (CA)
     2. Thickness readings 
-        1. Measurement Date
+        1. Measurement Date // Later
         2. Point thickness (Minimum of 15 thickness recommended)
-        3. Thickness profiles
+        3. Thickness profiles // Later
         4. Measurement location (Elbow Introdos/Extrados)
     3. User/Inspector/Engineer Data
         1. Report Date
