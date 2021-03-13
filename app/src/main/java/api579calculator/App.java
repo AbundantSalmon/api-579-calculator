@@ -3,6 +3,10 @@
  */
 package api579calculator;
 
+import api579calculator.logic.LevelOneAssessment;
+import api579calculator.logic.Measurements;
+import api579calculator.logic.Pipe;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
@@ -26,7 +30,10 @@ public class App {
 
         // Measurement points test
         double[] points = {2.6,2.6,2.6,2.6,2.6,2.6,2.6};
-        Measurements testPoints = new Measurements(points, 100.0, Measurements.MeasurementLocation.STRAIGHT, "Used for testing purposes");
+        Measurements testPoints = new Measurements(points,
+                100.0,
+                Measurements.MeasurementLocation.STRAIGHT,
+                "Used for testing purposes");
 
         // Assessment
         LevelOneAssessment assessment = new LevelOneAssessment(straightTestPipe,testPoints);

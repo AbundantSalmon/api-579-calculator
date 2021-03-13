@@ -1,4 +1,4 @@
-package api579calculator;
+package api579calculator.logic;
 
 /**
  * API 579 Fitness-for-Service - General Metal Loss - Level 1 - Type A - Straight Piping - PTR
@@ -13,7 +13,7 @@ public class LevelOneAssessment {
      * @param pipeUnderAssessment   the pipe under assessment
      * @param thicknessMeasurements the thickness measurements
      */
-    LevelOneAssessment(Pipe pipeUnderAssessment, Measurements thicknessMeasurements)
+    public LevelOneAssessment(Pipe pipeUnderAssessment, Measurements thicknessMeasurements)
     {
         this.pipeUnderAssessment = pipeUnderAssessment;
         this.thicknessMeasurements = thicknessMeasurements;

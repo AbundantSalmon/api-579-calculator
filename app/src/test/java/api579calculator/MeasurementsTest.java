@@ -1,5 +1,6 @@
 package api579calculator;
 
+import api579calculator.logic.Measurements;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

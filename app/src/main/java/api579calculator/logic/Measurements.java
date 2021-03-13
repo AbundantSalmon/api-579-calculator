@@ -1,4 +1,4 @@
-package api579calculator;
+package api579calculator.logic;
 
 import java.util.Arrays;
 
@@ -25,7 +25,7 @@ public class Measurements { // need to consider thickness profile measurements l
      *
      * @param thicknessMeasurements the thickness measurements
      */
-    Measurements(double[] thicknessMeasurements, double flawLongitudinalLength, MeasurementLocation measurementLocation, String notes)
+    public Measurements(double[] thicknessMeasurements, double flawLongitudinalLength, MeasurementLocation measurementLocation, String notes)
     {
         if(!(thicknessMeasurements.length > 0.0)) throw new IllegalArgumentException(); // need to at least have one measurement value
         for(double measurement: thicknessMeasurements)
