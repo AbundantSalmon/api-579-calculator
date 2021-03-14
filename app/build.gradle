@@ -12,8 +12,8 @@ plugins {
 }
 
 repositories {
-    // Use JCenter for resolving dependencies.
-    jcenter()
+    // Use mavenCentral for resolving dependencies as JCenter is being deprecated.
+    mavenCentral()
 }
 
 dependencies {
@@ -22,6 +22,9 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
+
+    // Rich Text
+    implementation 'org.fxmisc.richtext:richtextfx:0.10.5'
 }
 
 application {

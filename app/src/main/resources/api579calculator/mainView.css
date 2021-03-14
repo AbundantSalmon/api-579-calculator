@@ -1,0 +1,8 @@
+// RichTextFX
+
+.boolean_true {
+    -fx-fill: green;    // "true" in codeArea
+}
+.boolean_false {
+    -fx-fill: red;      // "false" in codeArea
+}

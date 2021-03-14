@@ -1,5 +1,8 @@
 package api579calculator.logic;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 /**
  * API 579 Fitness-for-Service - General Metal Loss - Level 1 - Type A - Straight Piping - PTR
  */
@@ -180,5 +183,26 @@ public class LevelOneAssessment {
         System.out.println();
         System.out.println("Pipe is \"Fit-for-Service\": " + isFitForService());
 
+    }
+
+    public String getAssessmentResults()
+    {
+        // Capture system.out.println message and redirect to string to return
+
+        // Create a stream to hold the output
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        // IMPORTANT: Save the old System.out!
+        PrintStream old = System.out;
+        // Tell Java to use your special stream
+        System.setOut(ps);
+        // Print some output: goes to your special stream
+        printAssessmentResults();
+        // Put things back
+        System.out.flush();
+        System.setOut(old);
+
+        // return captured system.out.print
+        return baos.toString();
     }
 }

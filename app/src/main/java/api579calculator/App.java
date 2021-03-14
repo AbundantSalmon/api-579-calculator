@@ -3,40 +3,34 @@
  */
 package api579calculator;
 
-import api579calculator.logic.LevelOneAssessment;
-import api579calculator.logic.Measurements;
-import api579calculator.logic.Pipe;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+public class App extends Application {
 
+    static final String APPLICATION_WINDOW_TITLE = "API 579-1 Straight Pipe FFS Calculator";
+    static final double WINDOW_WIDTH = 800.0;
+    static final double WINDOW_HEIGHT = 600.0;
+
+    // @TODO install java 11 and then get application running on java 11
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-
-        // Straight test Pipe
-        Pipe straightTestPipe = new Pipe(21.3,
-                2.77,
-                2.7,
-                Pipe.PipeType.STRAIGHT,
-                15.0,
-                138.0,
-                1.0,
-                1.0,
-                0.4,
-                0,
-                "Use for testing purposes");
-
-        // Measurement points test
-        double[] points = {2.6,2.6,2.6,2.6,2.6,2.6,2.6};
-        Measurements testPoints = new Measurements(points,
-                100.0,
-                Measurements.MeasurementLocation.STRAIGHT,
-                "Used for testing purposes");
-
-        // Assessment
-        LevelOneAssessment assessment = new LevelOneAssessment(straightTestPipe,testPoints);
-        assessment.printAssessmentResults();
+        launch(args);
     }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("mainView.fxml"));
+        primaryStage.setTitle(APPLICATION_WINDOW_TITLE);
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        // used for RichTextFX codeArea text highlighting
+        scene.getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
 }
