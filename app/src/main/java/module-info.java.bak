@@ -1,0 +1,23 @@
+// Temporarily used to modularise the app, but due to current want of making a fat app
+// with that is able to be run on any platform (win, mac, linux)
+// modularity is currently stripped (i.e. .bak). If modularity enabled, app would need to be
+// built individually for each platform due to java 11 not including javafx in the jdk
+// and each platform requiring it's own binaries. Currently a hack in the build.gradle
+// enables the inclusion of all necessary platform binaries but that prevents
+// modularisation. Also since the app is not modular, UiFX has been split off from
+// App cannot extend Application as well as have main, because it cannot be called when
+// Application has not been loaded (modular).
+//
+// Potentially in the future, change back to modular and implement a build pipeline which
+// complies separate builds for each platform every build.
+
+module api579calculator {
+    requires org.fxmisc.richtext;
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+
+    exports api579calculator;
+
+    opens api579calculator to javafx.fxml;
+}

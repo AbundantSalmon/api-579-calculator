@@ -1,9 +1,8 @@
-package api579calculator;
+package api579calculator.logic;
 
-import api579calculator.logic.Pipe;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PipeTest {
     double DELTA = 1e-8; // delta used for double comparisons

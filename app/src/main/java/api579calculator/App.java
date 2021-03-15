@@ -3,34 +3,12 @@
  */
 package api579calculator;
 
+import api579calculator.ui.UiFX;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-public class App extends Application {
-
-    static final String APPLICATION_WINDOW_TITLE = "API 579-1 Straight Pipe FFS Calculator";
-    static final double WINDOW_WIDTH = 800.0;
-    static final double WINDOW_HEIGHT = 600.0;
-
-    // @TODO install java 11 and then get application running on java 11
+public class App {
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(UiFX.class, args);
     }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("mainView.fxml"));
-        primaryStage.setTitle(APPLICATION_WINDOW_TITLE);
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        // used for RichTextFX codeArea text highlighting
-        scene.getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
 }
+

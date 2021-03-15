@@ -8,8 +8,20 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
+    id 'java'
     id 'application'
+
+    // would use when modular
+    //id 'org.openjfx.javafxplugin' version '0.0.9'
 }
+
+// Specify that gradle should compile to JDK11
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 
 repositories {
     // Use mavenCentral for resolving dependencies as JCenter is being deprecated.
@@ -25,9 +37,33 @@ dependencies {
 
     // Rich Text
     implementation 'org.fxmisc.richtext:richtextfx:0.10.5'
+
+    // Allow GUI to be run on any platform
+    implementation group: 'org.openjfx', name: 'javafx-base', version: '11.0.2', classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: '11.0.2', classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: '11.0.2', classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: '11.0.2', classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: '11.0.2', classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: '11.0.2', classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: '11.0.2', classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: '11.0.2', classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: '11.0.2', classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: '11.0.2', classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: '11.0.2', classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: '11.0.2', classifier: 'linux'
 }
+// commented out to allow packaging of all platform binaries so a single build can run on any platform
+// would use when modular
+//javafx {
+//    version = "11.0.2"
+//    modules = [ 'javafx.controls', 'javafx.fxml' ]
+//}
 
 application {
     // Define the main class for the application.
     mainClass = 'api579calculator.App'
+}
+
+installDist{
+
 }

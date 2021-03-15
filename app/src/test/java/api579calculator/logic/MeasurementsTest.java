@@ -1,4 +1,4 @@
-package api579calculator;
+package api579calculator.logic;
 
 import api579calculator.logic.Measurements;
 import org.junit.Test;

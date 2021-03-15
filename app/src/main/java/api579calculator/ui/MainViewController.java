@@ -1,4 +1,4 @@
-package api579calculator;
+package api579calculator.ui;
 
 import api579calculator.logic.LevelOneAssessment;
 import api579calculator.logic.Measurements;
