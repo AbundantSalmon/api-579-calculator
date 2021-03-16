@@ -4,13 +4,21 @@ import api579calculator.logic.LevelOneAssessment;
 import api579calculator.logic.Measurements;
 import api579calculator.logic.Pipe;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Pair;
+import javafx.util.StringConverter;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -44,14 +52,27 @@ public class MainViewController {
     @FXML // fx:id="corrosionAllowance"
     private TextField corrosionAllowance; // Value injected by FXMLLoader
 
+    @FXML // fx:id="commissionDate"
+    private DatePicker commissionDatePicker; // Value injected by FXMLLoader
+
     @FXML // fx:id="notes"
     private TextField notes; // Value injected by FXMLLoader
+
+    @FXML // fx:id="corrosionRate"
+    private TextField corrosionRate; // Value injected by FXMLLoader
 
     @FXML // fx:id="calculateButton"
     private Button calculateButton; // Value injected by FXMLLoader
 
+    @FXML // fx:id="clearButton"
+    private Button clearButton; // Value injected by FXMLLoader
+
     @FXML // fx:id="codeArea"
     private CodeArea codeArea; // Value injected by FXMLLoader
+
+    @FXML // fx:id="remainingLifeGraph"
+    private LineChart<Number, Number> remainingLifeGraph;   // Value injected by FXMLLoader
+    XYChart.Series<Number, Number> remainingLifeSeries;     // Series that will be displayed by remainingLifeGraph
 
     /**
      * "Calculate" button pressed
@@ -72,26 +93,73 @@ public class MainViewController {
                 Double.parseDouble(wFactor.getText()),
                 Double.parseDouble(yFactor.getText()),
                 Double.parseDouble(corrosionAllowance.getText()),
+                commissionDatePicker.getValue(),
                 notes.getText());
         // Measurement points test @TODO add measurement input capability
         Measurements testPoints = new Measurements(new double[]{2.6, 2.6, 2.6, 2.6, 2.6, 2.6, 2.6},
                 100.0,
                 Measurements.MeasurementLocation.STRAIGHT,
+                LocalDate.of(2021,4,5),
                 "Used for testing purposes");
 
         // Assessment
-        LevelOneAssessment assessment = new LevelOneAssessment(inputPipe,testPoints);
+        LevelOneAssessment assessment = new LevelOneAssessment(inputPipe,testPoints, Double.parseDouble(corrosionRate.getText()));
+
+        // Set codeArea with output
         codeArea.replaceText(0, codeArea.getLength(), assessment.getAssessmentResults());
+
+        // Generate for chart and display
+        ArrayList<Pair<Long,Double>> corrosionDateData = new ArrayList<>();
+        corrosionDateData.add(new Pair<>(inputPipe.getCommissionDate().toEpochDay(), inputPipe.getNomThickness()));
+        corrosionDateData.add(new Pair<>(testPoints.getMeasurementDate().toEpochDay(), testPoints.getT_am()));
+        corrosionDateData.add(new Pair<>(assessment.predictedFailureDate().toEpochDay(), testPoints.getT_mm()));
+        setRemainingLifeSeries(corrosionDateData);
+    }
+
+    @FXML
+    private void clearResults(MouseEvent event) {
+        // Clear codeArea
+        codeArea.clear();
+
+        // Clear chart
+        setRemainingLifeSeries();
     }
 
     // Runs after @FXML fields are injected
     @FXML
     public void initialize() {
+        // @TODO separate out into separate initialisation functions once setup
+
         // Initialise codeArea for syntax highlighting
         codeArea.textProperty().addListener(
                 (obs, oldText, newText) -> {
             codeArea.setStyleSpans(0, computeHighlighting(newText));
         });
+
+        // Initialise remainingLifeGraph
+        remainingLifeGraph.getXAxis().setLabel("Date");
+        remainingLifeGraph.getYAxis().setAutoRanging(true);
+        remainingLifeGraph.getYAxis().setLabel("Remaining Thickness");
+        remainingLifeGraph.getYAxis().setAutoRanging(true);
+        remainingLifeGraph.setTitle("Remaining Life");
+        remainingLifeGraph.setLegendVisible(false);
+        ((NumberAxis) remainingLifeGraph.getXAxis()).setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return LocalDate.ofEpochDay(object.longValue()).toString();
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return null;
+            }
+        });
+
+        // Initialise remainingLifeSeries
+        remainingLifeSeries = new XYChart.Series<>();
+        remainingLifeGraph.getData().add(remainingLifeSeries);
+        setRemainingLifeSeries();
+
         System.out.println("MainViewControllerInitialised");
     }
 
@@ -125,4 +193,35 @@ public class MainViewController {
 
     // ^^^^^^^^^^^^^^^^^^^^^^^^ Used for codeArea Styling
 
+    private void setRemainingLifeSeries(ArrayList<Pair<Long,Double>> data)
+    {
+        // Clear any data currently in the series
+        remainingLifeSeries.getData().clear();
+
+        // Populate the series with the supplied data
+        for(Pair<Long,Double> value: data)
+        {
+            remainingLifeSeries.getData().add(new XYChart.Data<>(value.getKey(), value.getValue()));
+        }
+
+        //@TODO add minimum thickness line
+
+        // sets reasonable axis bounds
+        remainingLifeGraph.getXAxis().setAutoRanging(false);
+        remainingLifeGraph.getYAxis().setAutoRanging(false);
+        NumberAxis xAxis = (NumberAxis) remainingLifeGraph.getXAxis();
+        NumberAxis yAxis = (NumberAxis) remainingLifeGraph.getYAxis();
+        xAxis.setLowerBound(data.get(0).getKey() - 30);
+        xAxis.setUpperBound(data.get(data.size() - 1).getKey() + 30);
+        yAxis.setLowerBound(data.get(0).getValue() - 1);
+        yAxis.setUpperBound(data.get(data.size() - 1).getValue() + 1);
+
+    }
+
+    // overloaded default function, clears data
+    private void setRemainingLifeSeries()
+    {
+        // Clear any data currently in the series
+        remainingLifeSeries.getData().clear();
+    }
 }

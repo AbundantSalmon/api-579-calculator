@@ -2,6 +2,8 @@ package api579calculator.logic;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -20,6 +22,7 @@ public class LevelOneAssessmentTest {
             1.0,
             0.4,
             0,
+            LocalDate.of(2020,3,24),
             "Use for testing purposes");
 
     // Measurement points test
@@ -28,6 +31,7 @@ public class LevelOneAssessmentTest {
             points,
             100.0,
             Measurements.MeasurementLocation.STRAIGHT,
+            LocalDate.of(2021,4,5),
             "Used for testing purposes");
 
     // Assessment

@@ -2,6 +2,8 @@ package api579calculator.logic;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.assertEquals;
 
 public class PipeTest {
@@ -17,6 +19,7 @@ public class PipeTest {
             1.0,
             0.4,
             0,
+            LocalDate.of(2020,3,24),
             "Use for testing purposes");
     @Test
     public void calculateTC_min() {

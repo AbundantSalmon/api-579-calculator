@@ -1,7 +1,8 @@
 package api579calculator.logic;
 
-import api579calculator.logic.Measurements;
 import org.junit.Test;
+
+import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
@@ -12,21 +13,21 @@ public class MeasurementsTest {
     @Test
     public void getT_mm() {
         double[] measurements = {34.2,56.4,12.3};
-        Measurements classUnderTest = new Measurements(measurements, 100, Measurements.MeasurementLocation.STRAIGHT,"");
+        Measurements classUnderTest = new Measurements(measurements, 100, Measurements.MeasurementLocation.STRAIGHT, LocalDate.of(2021,4,5), "");
         assertEquals(12.3, classUnderTest.getT_mm(), DELTA);
     }
 
     @Test
     public void getT_am() {
         double[] measurements = {34.2, 56.4, 12.3};
-        Measurements classUnderTest = new Measurements(measurements,100, Measurements.MeasurementLocation.STRAIGHT,"");
+        Measurements classUnderTest = new Measurements(measurements,100, Measurements.MeasurementLocation.STRAIGHT, LocalDate.of(2021,4,5), "");
         assertEquals(34.3, classUnderTest.getT_am(), DELTA);
     }
 
     @Test
     public void getCOV() {
         double[] measurements = {34.2, 56.4, 12.3};
-        Measurements classUnderTest = new Measurements(measurements,100, Measurements.MeasurementLocation.STRAIGHT,"");
+        Measurements classUnderTest = new Measurements(measurements,100, Measurements.MeasurementLocation.STRAIGHT, LocalDate.of(2021,4,5), "");
         assertEquals(0.642862101, classUnderTest.getCOV(), DELTA);
     }
 
@@ -38,11 +39,11 @@ public class MeasurementsTest {
     @Test
     public void isMinimumRecommendedPoints() {
         double[] measurements1 = {34.2, 56.4, 12.3};
-        Measurements classUnderTest1 = new Measurements(measurements1,100, Measurements.MeasurementLocation.STRAIGHT,"");
+        Measurements classUnderTest1 = new Measurements(measurements1,100, Measurements.MeasurementLocation.STRAIGHT, LocalDate.of(2021,4,5), "");
         assertFalse(classUnderTest1.isMinimumRecommendedPoints());
 
         double[] measurements2 = {34.2, 56.4, 12.3, 345.5, 34.0, 1.0, 3.5, 8,9,10,11,12,13,14,15};
-        Measurements classUnderTest2 = new Measurements(measurements2,100, Measurements.MeasurementLocation.STRAIGHT,"");
+        Measurements classUnderTest2 = new Measurements(measurements2,100, Measurements.MeasurementLocation.STRAIGHT, LocalDate.of(2021,4,5), "");
         assertTrue(classUnderTest2.isMinimumRecommendedPoints());
     }
 }

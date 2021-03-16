@@ -2,6 +2,7 @@ package api579calculator.logic;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.LocalDate;
 
 /**
  * API 579 Fitness-for-Service - General Metal Loss - Level 1 - Type A - Straight Piping - PTR
@@ -9,6 +10,7 @@ import java.io.PrintStream;
 public class LevelOneAssessment {
     private final Pipe pipeUnderAssessment;
     private final Measurements thicknessMeasurements;
+    private final double corrosionRate;
 
     /**
      * Instantiates a new Level one assessment.
@@ -16,10 +18,13 @@ public class LevelOneAssessment {
      * @param pipeUnderAssessment   the pipe under assessment
      * @param thicknessMeasurements the thickness measurements
      */
-    public LevelOneAssessment(Pipe pipeUnderAssessment, Measurements thicknessMeasurements)
+    public LevelOneAssessment(  Pipe pipeUnderAssessment,
+                                Measurements thicknessMeasurements,
+                                double corrosionRate)
     {
         this.pipeUnderAssessment = pipeUnderAssessment;
         this.thicknessMeasurements = thicknessMeasurements;
+        this.corrosionRate = corrosionRate;
     }
 
     /**
@@ -144,6 +149,26 @@ public class LevelOneAssessment {
     }
 
     /**
+     * Calculate remaining life double in years.
+     *
+     * @return the double
+     */
+    public double calculateRemainingLife()
+    {
+        return (thicknessMeasurements.getT_am() - pipeUnderAssessment.calculateT_min()) / corrosionRate;
+    }
+
+    /**
+     * Predicted failure date local date.
+     *
+     * @return the local date
+     */
+    public LocalDate predictedFailureDate()
+    {
+        return thicknessMeasurements.getMeasurementDate().plusDays((long)calculateRemainingLife()*365);
+    }
+
+    /**
      * Print assessment results.
      */
     public void printAssessmentResults()
@@ -182,6 +207,8 @@ public class LevelOneAssessment {
         System.out.println(thicknessMeasurements.getT_mm() + " >= max(" + 0.5*pipeUnderAssessment.calculateT_min()+", " +Math.max(0.2* pipeUnderAssessment.getNomThickness(), 2.5) + "): " + isAcceptableMinimumMeasuredThickness());
         System.out.println();
         System.out.println("Pipe is \"Fit-for-Service\": " + isFitForService());
+        System.out.println("Predicted Remaining Life: " + String.format("%.2f",calculateRemainingLife()) + " years (as per 4.5.1.1)");
+        System.out.println("Predicted Failure Date: " + predictedFailureDate().toString());
 
     }
 

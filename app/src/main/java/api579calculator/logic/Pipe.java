@@ -1,5 +1,7 @@
 package api579calculator.logic;
 
+import java.time.LocalDate;
+
 /**
  * Pipe class used to describe pipes and it's properties under analysis.
  * All values in mm, MPa and N.
@@ -34,12 +36,12 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     private final double yFactor; // Temperature Material Coefficient
     private final double corrosionAllowance;
     private final double tSL = 0.0; // supplemental thickness for mechanical loads other than pressure.
-    private final String notes;
                                     // not currently used as assuming Type A Component.
+    private final LocalDate commissionDate;
+    private final String notes;
 
     /**
      * Instantiates a new Straight Pipe.
-     *
      * @param outerDiameter                 the outer diameter
      * @param nomThickness                  the nominal thickness
      * @param corrThickness                 the corroded thickness
@@ -50,6 +52,7 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
      * @param wFactor                       the w factor
      * @param yFactor                       the y factor
      * @param corrosionAllowance            the corrosion allowance
+     * @param commissionDate                 the date of the commissioning of the pipe
      * @param notes                         the notes
      */
     public Pipe(double outerDiameter,
@@ -62,7 +65,7 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
                 double wFactor,
                 double yFactor,
                 double corrosionAllowance,
-                String notes)
+                LocalDate commissionDate, String notes)
     {
         if(outerDiameter > MINOUTERDIAMETER)
         {
@@ -134,6 +137,7 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
             throw new IllegalArgumentException();
         }
 
+        this.commissionDate = commissionDate;
         this.notes = notes;
     }
 
@@ -410,6 +414,15 @@ public class Pipe //potentially extend to children pipe-straight and pipe-elbow 
     public double calculateMAWP()
     {
         return Math.min(calculateMAWPC(), calculateMAWPL());
+    }
+
+    /**
+     * Gets commission date.
+     *
+     * @return the commission date
+     */
+    public LocalDate getCommissionDate() {
+        return commissionDate;
     }
 
     /**

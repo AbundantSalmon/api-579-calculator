@@ -1,5 +1,6 @@
 package api579calculator.logic;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -18,14 +19,23 @@ public class Measurements { // need to consider thickness profile measurements l
     private final double[] thicknessMeasurements;
     private final MeasurementLocation measurementLocation;
     private final double flawLongitudinalLength;              // s
+    private final LocalDate measurementDate;
     private final String notes;
 
     /**
      * Instantiates a new Measurements.
      *
-     * @param thicknessMeasurements the thickness measurements
+     * @param thicknessMeasurements  the thickness measurements
+     * @param flawLongitudinalLength the flaw longitudinal length
+     * @param measurementLocation    the measurement location
+     * @param measurementDate        the measurement date
+     * @param notes                  the notes
      */
-    public Measurements(double[] thicknessMeasurements, double flawLongitudinalLength, MeasurementLocation measurementLocation, String notes)
+    public Measurements(double[] thicknessMeasurements,
+                        double flawLongitudinalLength,
+                        MeasurementLocation measurementLocation,
+                        LocalDate measurementDate,
+                        String notes)
     {
         if(!(thicknessMeasurements.length > 0.0)) throw new IllegalArgumentException(); // need to at least have one measurement value
         for(double measurement: thicknessMeasurements)
@@ -40,6 +50,7 @@ public class Measurements { // need to consider thickness profile measurements l
             throw new IllegalArgumentException();
         }
         this.measurementLocation = measurementLocation;
+        this.measurementDate = measurementDate;
         this.notes = notes;
     }
 
@@ -146,6 +157,15 @@ public class Measurements { // need to consider thickness profile measurements l
     public MeasurementLocation getMeasurementLocation()
     {
         return measurementLocation;
+    }
+
+    /**
+     * Gets measurement date.
+     *
+     * @return the measurement date
+     */
+    public LocalDate getMeasurementDate() {
+        return measurementDate;
     }
 
     /**
