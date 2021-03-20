@@ -3,12 +3,14 @@ package api579calculator.ui;
 import api579calculator.logic.LevelOneAssessment;
 import api579calculator.logic.Measurements;
 import api579calculator.logic.Pipe;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
@@ -25,6 +27,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainViewController {
+
+    @FXML // fx:id="closeMenuItem"
+    private MenuItem closeMenuItem; // Value injected by FXMLLoader
+
     @FXML // fx:id="outerDiameter"
     private TextField outerDiameter; // Value injected by FXMLLoader
 
@@ -77,7 +83,7 @@ public class MainViewController {
     /**
      * "Calculate" button pressed
      * Performs calculation and updates the view with the results
-     * @param event
+     * @param event "Calculate" button clicked
      */
     @FXML
     private void calculate(MouseEvent event) {
@@ -125,6 +131,12 @@ public class MainViewController {
         setRemainingLifeSeries();
     }
 
+    @FXML
+    void closeProgram(ActionEvent event) {
+        // Close program
+        UiFX.closePrimaryStage();
+    }
+
     // Runs after @FXML fields are injected
     @FXML
     public void initialize() {
@@ -143,7 +155,7 @@ public class MainViewController {
         remainingLifeGraph.getYAxis().setAutoRanging(true);
         remainingLifeGraph.setTitle("Remaining Life");
         remainingLifeGraph.setLegendVisible(false);
-        ((NumberAxis) remainingLifeGraph.getXAxis()).setTickLabelFormatter(new StringConverter<Number>() {
+        ((NumberAxis) remainingLifeGraph.getXAxis()).setTickLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Number object) {
                 return LocalDate.ofEpochDay(object.longValue()).toString();
