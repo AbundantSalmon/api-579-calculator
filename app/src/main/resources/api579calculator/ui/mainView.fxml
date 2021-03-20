@@ -131,6 +131,19 @@
                               </GridPane>
                            </children>
                         </VBox>
+                        <VBox layoutX="15.0" layoutY="372.0">
+                           <children>
+                              <Label text="Thickness Measurements" />
+                              <HBox alignment="CENTER" prefHeight="0.0" prefWidth="350.0">
+                                 <children>
+                                    <Button fx:id="measurementButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#measurementButtonClick" text="Measurements" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
                         <VBox layoutX="15.0" layoutY="15.0">
                            <children>
                               <Label text="Environmental" />

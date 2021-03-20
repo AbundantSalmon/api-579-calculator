@@ -73,6 +73,9 @@ public class MainViewController {
     @FXML // fx:id="corrosionRate"
     private TextField corrosionRate; // Value injected by FXMLLoader
 
+    @FXML // fx:id="measurementButton"
+    private Button measurementButton; // Value injected by FXMLLoader
+
     @FXML // fx:id="calculateButton"
     private Button calculateButton; // Value injected by FXMLLoader
 
@@ -85,6 +88,8 @@ public class MainViewController {
     @FXML // fx:id="remainingLifeGraph"
     private LineChart<Number, Number> remainingLifeGraph;   // Value injected by FXMLLoader
     XYChart.Series<Number, Number> remainingLifeSeries;     // Series that will be displayed by remainingLifeGraph
+
+    private final ThicknessMeasurementWindow thicknessMeasurementWindow = new ThicknessMeasurementWindow();
 
     /**
      * "Calculate" button pressed
@@ -107,15 +112,24 @@ public class MainViewController {
                 Double.parseDouble(corrosionAllowance.getText()),
                 commissionDatePicker.getValue(),
                 notes.getText());
-        // Measurement points test @TODO add measurement input capability
-        Measurements testPoints = new Measurements(new double[]{2.6, 2.6, 2.6, 2.6, 2.6, 2.6, 2.6},
-                100.0,
+
+        // Parse thickness measurement values
+        String[] thicknessPointsStrings = thicknessMeasurementWindow.getThicknessMeasurementsString().split(",");
+        double[] thicknessPointsDoubles = new double[thicknessPointsStrings.length];
+        for(int i = 0; i < thicknessPointsStrings.length; ++i)
+        {
+            thicknessPointsDoubles[i] = Double.parseDouble(thicknessPointsStrings[i]);
+        }
+
+        Measurements inputMeasurementPoints = new Measurements(
+                thicknessPointsDoubles,
+                Double.parseDouble(thicknessMeasurementWindow.getFlawLongitudinalLengthString()),
                 Measurements.MeasurementLocation.STRAIGHT,
-                LocalDate.of(2021,4,5),
-                "Used for testing purposes");
+                thicknessMeasurementWindow.getMeasurementDate(),
+                thicknessMeasurementWindow.getNotes());
 
         // Assessment
-        LevelOneAssessment assessment = new LevelOneAssessment(inputPipe,testPoints, Double.parseDouble(corrosionRate.getText()));
+        LevelOneAssessment assessment = new LevelOneAssessment(inputPipe, inputMeasurementPoints, Double.parseDouble(corrosionRate.getText()));
 
         // Set codeArea with output
         codeArea.replaceText(0, codeArea.getLength(), assessment.getAssessmentResults());
@@ -123,8 +137,8 @@ public class MainViewController {
         // Generate for chart and display
         ArrayList<Pair<Long,Double>> corrosionDateData = new ArrayList<>();
         corrosionDateData.add(new Pair<>(inputPipe.getCommissionDate().toEpochDay(), inputPipe.getNomThickness()));
-        corrosionDateData.add(new Pair<>(testPoints.getMeasurementDate().toEpochDay(), testPoints.getT_am()));
-        corrosionDateData.add(new Pair<>(assessment.predictedFailureDate().toEpochDay(), testPoints.getT_mm()));
+        corrosionDateData.add(new Pair<>(inputMeasurementPoints.getMeasurementDate().toEpochDay(), inputMeasurementPoints.getT_am()));
+        corrosionDateData.add(new Pair<>(assessment.predictedFailureDate().toEpochDay(), inputMeasurementPoints.getT_mm()));
         setRemainingLifeSeries(corrosionDateData);
     }
 
@@ -149,7 +163,7 @@ public class MainViewController {
 
         label.setAlignment(Pos.CENTER);
         VBox vBox = new VBox(label);
-        vBox.setPadding(new Insets(10,10,10,10));
+        vBox.setPadding(new Insets(10));
 
         Scene secondScene = new Scene(vBox, 230, 100);
         Stage stage = new Stage();
@@ -159,6 +173,12 @@ public class MainViewController {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(UiFX.getPrimaryStage());
         stage.show();
+    }
+
+    @FXML
+    void measurementButtonClick(ActionEvent event)
+    {
+        thicknessMeasurementWindow.openWindow();
     }
 
     // Runs after @FXML fields are injected
