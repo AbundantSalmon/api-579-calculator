@@ -5,14 +5,17 @@ import api579calculator.logic.Measurements;
 import api579calculator.logic.Pipe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import org.fxmisc.richtext.CodeArea;
@@ -30,6 +33,9 @@ public class MainViewController {
 
     @FXML // fx:id="closeMenuItem"
     private MenuItem closeMenuItem; // Value injected by FXMLLoader
+
+    @FXML // fx:id="aboutMenuItem"
+    private MenuItem aboutMenuItem; // Value injected by FXMLLoader
 
     @FXML // fx:id="outerDiameter"
     private TextField outerDiameter; // Value injected by FXMLLoader
@@ -135,6 +141,24 @@ public class MainViewController {
     void closeProgram(ActionEvent event) {
         // Close program
         UiFX.closePrimaryStage();
+    }
+
+    @FXML
+    void aboutMenuItemOpen(ActionEvent event) {
+        Label label = new Label(UiFX.APPLICATION_WINDOW_TITLE + "\n\u00a9 2021 AbundantSalmon");
+
+        label.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox(label);
+        vBox.setPadding(new Insets(10,10,10,10));
+
+        Scene secondScene = new Scene(vBox, 230, 100);
+        Stage stage = new Stage();
+
+        stage.setScene(secondScene);
+        stage.setTitle("About");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(UiFX.getPrimaryStage());
+        stage.show();
     }
 
     // Runs after @FXML fields are injected

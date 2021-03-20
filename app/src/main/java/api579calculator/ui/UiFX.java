@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class UiFX extends Application {
-    private static final String APPLICATION_WINDOW_TITLE = "API 579-1 Straight Pipe FFS Calculator";
+    public static final String APPLICATION_WINDOW_TITLE = "API 579-1 Straight Pipe FFS Calculator";
     private static final double WINDOW_WIDTH = 800.0;
     private static final double WINDOW_HEIGHT = 600.0;
 
@@ -34,5 +34,15 @@ public class UiFX extends Application {
     public static void closePrimaryStage()
     {
         primaryStage.close();
+    }
+
+
+    /**
+     * Gets primary stage.
+     *
+     * @return the primary stage
+     */
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 }
