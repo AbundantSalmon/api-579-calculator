@@ -65,7 +65,7 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="OD:" GridPane.halignment="RIGHT" />
+                                    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Outer Diameter:" GridPane.halignment="RIGHT" />
                                     <Label text="Nominal Thickness:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     <Label text="Measured Thickness:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                                     <Label text="Design Pressure:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
@@ -207,7 +207,10 @@
       </SplitPane>
       <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
          <children>
-            <Label text="Label" />
+            <Label fx:id="statusLabel" text="Please input data">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
          </children>
          <padding>
             <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

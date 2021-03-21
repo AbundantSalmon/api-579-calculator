@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
-// @TODO change to a MVC approach, currently a mash of MVC all in one
+// @TODO change to a MVP approach, currently a mash of MVP all in one
 // * Make FXML for window
 // * Make controller for FXML
 // * Modify Measurements class to accept input/output like a model (currently designed to only get created and do calculations, not change values)
@@ -21,7 +21,6 @@ public class ThicknessMeasurementWindow {
     private final TextField flawLongitudinalLengthTextField = new TextField("100.0");
     private final DatePicker measurementDatePicker = new DatePicker();
     private final TextField notesTextField = new TextField("thickness measurement test notes");
-
 
     public ThicknessMeasurementWindow()
     {
@@ -81,9 +80,17 @@ public class ThicknessMeasurementWindow {
         return flawLongitudinalLengthTextField.getText();
     }
 
+    public TextField getFlawLongitudinalLengthTextField() {
+        return flawLongitudinalLengthTextField;
+    }
+
     public LocalDate getMeasurementDate()
     {
         return measurementDatePicker.getValue();
+    }
+
+    public DatePicker getMeasurementDatePicker() {
+        return measurementDatePicker;
     }
 
     public String getNotes() {

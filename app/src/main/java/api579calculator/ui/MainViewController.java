@@ -89,7 +89,16 @@ public class MainViewController {
     private LineChart<Number, Number> remainingLifeGraph;   // Value injected by FXMLLoader
     XYChart.Series<Number, Number> remainingLifeSeries;     // Series that will be displayed by remainingLifeGraph
 
+    @FXML // fx:id="statusLabel"
+    private Label statusLabel; // Value injected by FXMLLoader
+
     private final ThicknessMeasurementWindow thicknessMeasurementWindow = new ThicknessMeasurementWindow();
+
+    // ArrayList of TextFields which need to be validated that a double has inputted by the user
+    private final ArrayList<Pair<TextField, String>> doubleTextFields = new ArrayList<>();
+
+    // ArrayList of DatePicker which need to be validated
+    private final ArrayList<Pair<DatePicker, String>> datesToValidate = new ArrayList<>();
 
     /**
      * "Calculate" button pressed
@@ -99,6 +108,12 @@ public class MainViewController {
     @FXML
     private void calculate(MouseEvent event) {
         // @TODO Validate inputs and handle invalid inputs
+        if(!validateInputs())
+        {
+            // error in validation of inputs, do not proceed with rest of calculation
+            return;
+        }
+
         Pipe inputPipe = new Pipe(
                 Double.parseDouble(outerDiameter.getText()),
                 Double.parseDouble(nomThickness.getText()),
@@ -140,6 +155,8 @@ public class MainViewController {
         corrosionDateData.add(new Pair<>(inputMeasurementPoints.getMeasurementDate().toEpochDay(), inputMeasurementPoints.getT_am()));
         corrosionDateData.add(new Pair<>(assessment.predictedFailureDate().toEpochDay(), inputMeasurementPoints.getT_mm()));
         setRemainingLifeSeries(corrosionDateData);
+
+        statusLabel.setText("Executed");
     }
 
     @FXML
@@ -152,13 +169,13 @@ public class MainViewController {
     }
 
     @FXML
-    void closeProgram(ActionEvent event) {
+    private void closeProgram(ActionEvent event) {
         // Close program
         UiFX.closePrimaryStage();
     }
 
     @FXML
-    void aboutMenuItemOpen(ActionEvent event) {
+    private void aboutMenuItemOpen(ActionEvent event) {
         Label label = new Label(UiFX.APPLICATION_WINDOW_TITLE + "\n\u00a9 2021 AbundantSalmon");
 
         label.setAlignment(Pos.CENTER);
@@ -176,15 +193,31 @@ public class MainViewController {
     }
 
     @FXML
-    void measurementButtonClick(ActionEvent event)
+    private void measurementButtonClick(ActionEvent event)
     {
         thicknessMeasurementWindow.openWindow();
     }
 
     // Runs after @FXML fields are injected
     @FXML
-    public void initialize() {
-        // @TODO separate out into separate initialisation functions once setup
+    public void initialize()
+    {
+        // Initialise doubleTextFields with all the TextFields that should be validated as doubles
+        doubleTextFields.add(new Pair<>(outerDiameter, "Outer Diameter"));
+        doubleTextFields.add(new Pair<>(nomThickness, "Nominal Thickness"));
+        doubleTextFields.add(new Pair<>(corrThickness, "Corroded Thickness"));
+        doubleTextFields.add(new Pair<>(designPressure, "Design Pressure"));
+        doubleTextFields.add(new Pair<>(designAllowableMaterialStress, "Design Allowable Material Stress"));
+        doubleTextFields.add(new Pair<>(eFactor, "E"));
+        doubleTextFields.add(new Pair<>(wFactor, "W"));
+        doubleTextFields.add(new Pair<>(yFactor, "y"));
+        doubleTextFields.add(new Pair<>(corrosionAllowance, "Corrosion Allowance"));
+        doubleTextFields.add(new Pair<>(corrosionRate, "Corrosion Rate"));
+        doubleTextFields.add(new Pair<>(thicknessMeasurementWindow.getFlawLongitudinalLengthTextField(), "Flaw Longitudinal Length"));
+
+        // Initialise datesToValidate with all DatePickers that should be validated as valid dates
+        datesToValidate.add(new Pair<>(commissionDatePicker, "Commission Date"));
+        datesToValidate.add(new Pair<>(thicknessMeasurementWindow.getMeasurementDatePicker(), "Thickness Measurement Date"));
 
         // Initialise codeArea for syntax highlighting
         codeArea.textProperty().addListener(
@@ -279,5 +312,65 @@ public class MainViewController {
     {
         // Clear any data currently in the series
         remainingLifeSeries.getData().clear();
+    }
+
+    private boolean validateInputs()
+    {
+        // @TODO write tests for the validations
+
+        // Validate user has supplied doubles to the text fields
+        for(Pair<TextField,String> textFieldPair : doubleTextFields)
+        {
+            if(!isParsableAsDouble(textFieldPair.getKey().getText()))
+            {
+                statusLabel.setText("\u26A0 invalid input for: " + textFieldPair.getValue());
+                return false;
+            }
+        }
+
+        // Validate that dates have been supplied
+        for(Pair<DatePicker,String> datePickerPair : datesToValidate)
+        {
+            if(datePickerPair.getKey().getValue() == null)
+            {
+                statusLabel.setText("\u26A0 invalid date provided: " + datePickerPair.getValue());
+                return false;
+            }
+        }
+
+        // Validate that commission date is before measurement date
+        if(commissionDatePicker.getValue().compareTo(thicknessMeasurementWindow.getMeasurementDate()) > 0)
+        {
+            statusLabel.setText("\u26A0 invalid input: Commission Date needs to before Thickness Measurement Date");
+            return false;
+        }
+
+        // Validate thickness measurements
+        String[] thicknessPointsStrings = thicknessMeasurementWindow.getThicknessMeasurementsString().split(",");
+        for(String value : thicknessPointsStrings)
+        {
+            if(!isParsableAsDouble(value))
+            {
+                statusLabel.setText("\u26A0 invalid input: Thickness Measurements");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isParsableAsDouble(String value)
+    {
+        try
+        {
+            Double.parseDouble(value);
+        }
+        catch(NumberFormatException e)
+        {
+            //not a double
+            return false;
+        }
+
+        return true;
     }
 }
