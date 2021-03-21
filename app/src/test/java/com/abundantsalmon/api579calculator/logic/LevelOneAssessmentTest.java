@@ -35,7 +35,7 @@ public class LevelOneAssessmentTest {
             "Used for testing purposes");
 
     // Assessment
-    LevelOneAssessment testAssessment = new LevelOneAssessment(straightTestPipe,testPoints);
+    LevelOneAssessment testAssessment = new LevelOneAssessment(straightTestPipe,testPoints,0.3);
 
     @Test
     public void isAcceptableAverageMeasuredThicknessPTR() {
