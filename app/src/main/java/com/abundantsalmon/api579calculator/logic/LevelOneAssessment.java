@@ -1,4 +1,4 @@
-package api579calculator.logic;
+package com.abundantsalmon.api579calculator.logic;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

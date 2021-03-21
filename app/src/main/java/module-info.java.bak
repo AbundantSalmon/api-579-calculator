@@ -11,13 +11,13 @@
 // Potentially in the future, change back to modular and implement a build pipeline which
 // complies separate builds for each platform every build.
 
-module api579calculator {
+module com.abundantsalmon.api579calculator {
     requires org.fxmisc.richtext;
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
 
-    exports api579calculator;
+    exports com.abundantsalmon.api579calculator;
 
-    opens api579calculator to javafx.fxml;
+    opens com.abundantsalmon.api579calculator to javafx.fxml;
 }

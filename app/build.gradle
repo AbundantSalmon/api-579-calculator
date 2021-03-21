@@ -61,7 +61,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'api579calculator.App'
+    mainClass = 'com.abundantsalmon.api579calculator.App'
 }
 
 installDist{

@@ -1,4 +1,4 @@
-package api579calculator.ui;
+package com.abundantsalmon.api579calculator.ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,8 +1,8 @@
-package api579calculator.ui;
+package com.abundantsalmon.api579calculator.ui;
 
-import api579calculator.logic.LevelOneAssessment;
-import api579calculator.logic.Measurements;
-import api579calculator.logic.Pipe;
+import com.abundantsalmon.api579calculator.logic.LevelOneAssessment;
+import com.abundantsalmon.api579calculator.logic.Measurements;
+import com.abundantsalmon.api579calculator.logic.Pipe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -176,7 +176,7 @@ public class MainViewController {
 
     @FXML
     private void aboutMenuItemOpen(ActionEvent event) {
-        Label label = new Label(UiFX.APPLICATION_WINDOW_TITLE + "\n\u00a9 2021 AbundantSalmon");
+        Label label = new Label(UiFX.APPLICATION_WINDOW_TITLE + "\nv0.1.0\n\u00a9 2021 AbundantSalmon");
 
         label.setAlignment(Pos.CENTER);
         VBox vBox = new VBox(label);
