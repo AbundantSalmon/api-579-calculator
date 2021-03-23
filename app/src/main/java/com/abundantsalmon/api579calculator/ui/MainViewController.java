@@ -107,7 +107,6 @@ public class MainViewController {
      */
     @FXML
     private void calculate(MouseEvent event) {
-        // @TODO Validate inputs and handle invalid inputs
         if(!validateInputs())
         {
             // error in validation of inputs, do not proceed with rest of calculation

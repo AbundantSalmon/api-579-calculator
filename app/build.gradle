@@ -10,6 +10,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'java'
     id 'application'
+    id 'org.beryx.runtime' version '1.12.2' // custom runtime image for non-modular application
 
     // would use when modular
     //id 'org.openjfx.javafxplugin' version '0.0.9'
